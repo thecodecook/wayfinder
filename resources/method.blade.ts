@@ -57,7 +57,7 @@
     }
 @endif
 
-    return {!! $method !!}.definition.url
+    return applyPrefix({!! $method !!}.definition.url)
 @foreach ($parameters as $parameter)
             .replace(@js($parameter->placeholder), parsedArgs.{!! $parameter->name !!}{!! when($parameter->optional, '?') !!}.toString(){!! when($parameter->optional, " ?? ''") !!})
     @if ($loop->last)

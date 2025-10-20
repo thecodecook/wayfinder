@@ -3,7 +3,8 @@ import {
     defaultParametersDomain,
     fixedDomain,
 } from "../workbench/resources/js/actions/App/Http/Controllers/DomainController";
-import { setUrlDefaults } from "../workbench/resources/js/wayfinder";
+import { setUrlDefaults, setRoutePrefix } from "../workbench/resources/js/wayfinder";
+import nested from "../workbench/resources/js/routes/nested";
 
 test("it can generate urls without default parameters set", () => {
     expect(fixedDomain.url({ param: "foo" })).toBe(
@@ -21,4 +22,10 @@ test("it can generate urls with default URL parameters set on backend and fronte
             param: "foo",
         }),
     ).toBe("//tim.macdonald.au/default-parameters-domain/foo");
+});
+
+test("it can use prefix", () => {
+    setRoutePrefix("sk");
+
+    expect(nested.child().url).toBe("/sk/nested/controller/child");
 });

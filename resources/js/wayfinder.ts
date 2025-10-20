@@ -27,6 +27,46 @@ export type RouteQueryOptions = {
     mergeQuery?: QueryParams;
 };
 
+let routePrefix: string | undefined;
+
+export const setRoutePrefix = (prefix: string | undefined): void => {
+    routePrefix = prefix;
+};
+
+export const applyPrefix = (
+    url: string,
+    options?: { prefix?: string },
+): string => {
+    const prefix = options?.prefix ?? routePrefix;
+
+    if (!prefix) {
+        return url;
+    }
+
+    const cleanedPrefix = prefix.endsWith("/")
+        ? prefix.slice(0, -1)
+        : prefix;
+
+    if (url === "/") {
+        if (!cleanedPrefix) {
+            return "/";
+        }
+        return cleanedPrefix.startsWith("/")
+            ? cleanedPrefix
+            : `/${cleanedPrefix}`;
+    }
+
+    const cleanedUrl = url.startsWith("/") ? url.slice(1) : url;
+
+    const prefixedUrl = `${cleanedPrefix}/${cleanedUrl}`;
+
+    if (url.startsWith("/") && !prefixedUrl.startsWith("/")) {
+        return `/${prefixedUrl}`;
+    }
+
+    return prefixedUrl;
+};
+
 export const queryParams = (options?: RouteQueryOptions) => {
     if (!options || (!options.query && !options.mergeQuery)) {
         return "";
