@@ -15,6 +15,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\TwoRoutesSameActionController;
 use App\Http\Controllers\UrlDefaultsController;
 use App\Http\Middleware\UrlDefaultsMiddleware;
+use App\Prism\Prism\Http\Controllers\PrismChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,6 +40,10 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 Route::get('/dashboard', function () {
     return 'Dashboard';
 })->name('dashboard');
+
+Route::get('/invalid-js-name', function () {
+    return 'Invalid JS name';
+})->name('invalid#js@name');
 
 Route::get('/', function () {
     return 'Home';
@@ -66,6 +71,8 @@ Route::domain('{defaultDomain}.au')->get('/default-parameters-domain/{param}', [
 Route::get('/nested/controller', [NestedController::class, 'nested']);
 Route::get('/nested/controller/child', [NestedController::class, 'child'])->name('nested.child');
 Route::get('/nested/controller/child/grandchild', [NestedController::class, 'grandchild'])->name('nested.child.grandchild');
+
+Route::get('/prism/chat', [PrismChatController::class, 'index']);
 
 Route::get('/two-routes-one-action-1', [TwoRoutesSameActionController::class, 'same']);
 Route::get('/two-routes-one-action-2', [TwoRoutesSameActionController::class, 'same']);

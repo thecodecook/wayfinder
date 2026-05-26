@@ -29,3 +29,27 @@ test("it can use prefix", () => {
 
     expect(nested.child().url).toBe("/sk/nested/controller/child");
 });
+test("it can generate urls with dynamic function-based default URL parameters", () => {
+    let callCount = 0;
+
+    setUrlDefaults(() => {
+        callCount++;
+        return {
+            defaultDomain: `dynamic-${callCount}.test`,
+        };
+    });
+
+    expect(
+        defaultParametersDomain.url({
+            param: "foo",
+        }),
+    ).toBe("//dynamic-1.test.au/default-parameters-domain/foo");
+
+    expect(
+        defaultParametersDomain.url({
+            param: "bar",
+        }),
+    ).toBe("//dynamic-2.test.au/default-parameters-domain/bar");
+
+    expect(callCount).toBe(2);
+});
