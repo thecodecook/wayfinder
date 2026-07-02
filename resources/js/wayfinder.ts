@@ -29,18 +29,38 @@ export type RouteQueryOptions = {
 };
 
 let routePrefix: string | undefined;
+let routePrefixExcept: string[] = [];
 
-export const setRoutePrefix = (prefix: string | undefined): void => {
+export const setRoutePrefix = (
+    prefix: string | undefined,
+    options?: { except?: string[] },
+): void => {
     routePrefix = prefix;
+    routePrefixExcept = options?.except ?? [];
 };
+
+const isExceptPrefix = (url: string, except: string[]): boolean =>
+    except.some((exception) => {
+        const cleaned = exception.endsWith("/")
+            ? exception.slice(0, -1)
+            : exception;
+        const normalized = cleaned.startsWith("/") ? cleaned : `/${cleaned}`;
+
+        return url === normalized || url.startsWith(`${normalized}/`);
+    });
 
 export const applyPrefix = (
     url: string,
-    options?: { prefix?: string },
+    options?: { prefix?: string; except?: string[] },
 ): string => {
     const prefix = options?.prefix ?? routePrefix;
+    const except = options?.except ?? routePrefixExcept;
 
     if (!prefix) {
+        return url;
+    }
+
+    if (isExceptPrefix(url, except)) {
         return url;
     }
 
